@@ -41,7 +41,7 @@ export default function ClientChatPage() {
               {message.role === "agent" ? (
                 // Agent message - left aligned
                 <div className="flex gap-2 max-w-[80%]">
-                  <div className="h-8 w-8 rounded-full bg-primary flex-shrink-0" />
+                  <div className="h-8 w-8 rounded-full bg-primary shrink-0" />
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-medium">NexTalk</span>
@@ -96,9 +96,9 @@ export default function ClientChatPage() {
             placeholder="Type a message as a customer"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            className="min-h-[44px] h-[44px] resize-none py-3"
+            className="min-h-11 h-11 resize-none py-3"
           />
-          <Button className="h-[44px] px-4 flex items-center gap-2">
+          <Button className="h-11 px-4 flex items-center gap-2">
             <Send className="h-4 w-4" />
             <span>Send</span>
           </Button>

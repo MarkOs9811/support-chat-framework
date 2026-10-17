@@ -1,11 +1,27 @@
 import { NavLink, Outlet } from "react-router";
 
+import type { Route } from "./+types/chat-layout";
+
 import { Button } from "~/components/ui/button";
 import { ScrollArea } from "~/components/ui/scroll-area";
 
 import { LogOut, X } from "lucide-react";
+import ContactList from "~/chat/component/ContactList";
+import ContactInformationCard from "~/chat/component/contac-information-card/ContactInformationCard";
+import { getClients } from "~/fake/fake-data";
 
-const ChatLayout = () => {
+// ===== Utilziando loader() para traer informacion del backend esto reemplaza a un useMediaQuery
+export async function loader() {
+  const clients = await getClients();
+  return { clients };
+}
+// ============================================
+
+
+function ChatLayout({ loaderData }: Route.ComponentProps) {
+
+  const { clients } = loaderData
+
   return (
     <div className="flex h-screen bg-background">
       {/* Sidebar */}
@@ -16,70 +32,8 @@ const ChatLayout = () => {
             <span className="font-semibold">NexTalk</span>
           </div>
         </div>
-        <ScrollArea className="h-[calc(100vh-120px)]">
-          <div className="space-y-4 p-4">
-            <div className="space-y-1">
-              <h3 className="px-2 text-sm font-semibold">Contacts</h3>
-              <div className="space-y-1">
-                <NavLink to="/chat/" className="w-full justify-start">
-                  <div className="h-6 w-6 rounded-full bg-blue-500 mr-2 flex-shrink-0 flex items-center justify-center text-white text-xs">
-                    G5
-                  </div>
-                  G5 Customer
-                </NavLink>
 
-                <NavLink
-                  to={"/chat/ABC"}
-                  className={({ isActive }) =>
-                    isActive
-                      ? "w-full justify-start flex items-center gap-2 bg-gray-200 text-gray-900 rounded-full pl-2 py-1 transition-all duration-500"
-                      : "w-full justify-start flex items-center gap-2"
-                  }
-                >
-                  <div className="h-6 w-6 rounded-full bg-green-500 mr-2 flex-shrink-0 flex items-center justify-center text-white text-xs">
-                    JD
-                  </div>
-                  John Doe
-                </NavLink>
-
-                <Button variant="ghost" className="w-full justify-start">
-                  <div className="h-6 w-6 rounded-full bg-purple-500 mr-2 flex-shrink-0 flex items-center justify-center text-white text-xs">
-                    AS
-                  </div>
-                  Alice Smith
-                </Button>
-                <Button variant="ghost" className="w-full justify-start">
-                  <div className="h-6 w-6 rounded-full bg-yellow-500 mr-2 flex-shrink-0 flex items-center justify-center text-white text-xs">
-                    RJ
-                  </div>
-                  Robert Johnson
-                </Button>
-                <Button variant="ghost" className="w-full justify-start">
-                  <div className="h-6 w-6 rounded-full bg-pink-500 mr-2 flex-shrink-0 flex items-center justify-center text-white text-xs">
-                    EW
-                  </div>
-                  Emma Wilson
-                </Button>
-              </div>
-            </div>
-            <div className="pt-4 border-t mt-4">
-              <h3 className="px-2 text-sm font-semibold mb-1">Recent</h3>
-              <Button variant="ghost" className="w-full justify-start">
-                <div className="h-6 w-6 rounded-full bg-gray-500 mr-2 flex-shrink-0 flex items-center justify-center text-white text-xs">
-                  TM
-                </div>
-                Thomas Miller
-              </Button>
-              <Button variant="ghost" className="w-full justify-start">
-                <div className="h-6 w-6 rounded-full bg-red-500 mr-2 flex-shrink-0 flex items-center justify-center text-white text-xs">
-                  SB
-                </div>
-                Sarah Brown
-              </Button>
-            </div>
-          </div>
-        </ScrollArea>
-
+        <ContactList clients={clients} />
         <div className="w-full p-2 border-t">
           <Button variant="default" className={"w-full bg-primary "}>
             <LogOut />
@@ -111,7 +65,9 @@ const ChatLayout = () => {
           <div className="h-14 border-b px-4 flex items-center">
             <h2 className="font-medium">Contact details</h2>
           </div>
-          <div className="p-4">
+
+          <ContactInformationCard />
+          {/* <div className="p-4">
             <div className="flex flex-col items-center pb-6 border-b">
               <div className="h-20 w-20 rounded-full bg-blue-500 flex items-center justify-center text-white text-xl mb-3">
                 G5
@@ -169,7 +125,7 @@ const ChatLayout = () => {
                 View full profile
               </Button>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
