@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from "react-router";
+import { NavLink, Outlet, redirect } from "react-router";
 
 import type { Route } from "./+types/chat-layout";
 
@@ -9,18 +9,27 @@ import { LogOut, X } from "lucide-react";
 import ContactList from "~/chat/component/ContactList";
 import ContactInformationCard from "~/chat/component/contac-information-card/ContactInformationCard";
 import { getClients } from "~/fake/fake-data";
+import { LogoutButton } from "~/auth/components/LogOutButton";
+import { getSession } from "~/sessions.server";
 
 // ===== Utilziando loader() para traer informacion del backend esto reemplaza a un useMediaQuery
-export async function loader() {
+export async function loader({ request }: Route.LoaderArgs) {
+  const session = await getSession(request.headers.get("Cookie"))
+  const userName = session.get('name');
+
+  if (!session.has("userId")) {
+    // Si no está autenticado, intercepta la carga y redirige al login
+    return redirect("/auth/login");
+  }
   const clients = await getClients();
-  return { clients };
+  return { clients, userName };
 }
 // ============================================
 
 
 function ChatLayout({ loaderData }: Route.ComponentProps) {
 
-  const { clients } = loaderData
+  const { clients, userName } = loaderData
 
   return (
     <div className="flex h-screen bg-background">
@@ -29,16 +38,13 @@ function ChatLayout({ loaderData }: Route.ComponentProps) {
         <div className="p-4 border-b">
           <div className="flex items-center gap-2">
             <div className="h-6 w-6 rounded-full bg-primary" />
-            <span className="font-semibold">NexTalk</span>
+            <span className="font-semibold">{userName}</span>
           </div>
         </div>
 
         <ContactList clients={clients} />
         <div className="w-full p-2 border-t">
-          <Button variant="default" className={"w-full bg-primary "}>
-            <LogOut />
-            Cerrar Sesión
-          </Button>
+          <LogoutButton />
         </div>
       </div>
 
