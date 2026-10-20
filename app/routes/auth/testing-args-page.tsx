@@ -47,7 +47,10 @@ export async function loader({ params }: Route.LoaderArgs) {
   return { hola: "Mundo" };
 }
 
-export async function clientLoader({ params, serverLoader }: Route.ClientLoaderArgs) {
+export async function clientLoader({
+  params,
+  serverLoader,
+}: Route.ClientLoaderArgs) {
   await sleep(1500);
   const datosDelServidor = await serverLoader();
   return { hola: "Mundo" };
@@ -70,18 +73,21 @@ export default function TestingArgsPage({
   params,
   matches,
 }: Route.ComponentProps) {
-
   const { id, name, age } = params;
 
   return (
     <div>
-      <h1 className="font-bold text-2xl">Testing ARGS page</h1>
+      <h1 className="font-bold text-2xl">Name: {name}</h1>
+      <h1 className="font-bold text-2xl">Age: {age}</h1>
+      <h1 className="font-bold text-2xl">id: {id}</h1>
       <p>Loader Data: {JSON.stringify(loaderData)}</p>
       <p>Action Data: {JSON.stringify(actionData)}</p>
       <p>Route Parameters: {JSON.stringify(params)}</p>
       <p>Matched Routes: {JSON.stringify(matches)}</p>
 
-      <Link to="/auth/testing" className="underline text-blue-500 text-2xl">Volver</Link>
+      <Link to="/auth/testing" className="underline text-blue-500 text-2xl">
+        Volver
+      </Link>
     </div>
   );
 }

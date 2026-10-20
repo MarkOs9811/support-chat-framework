@@ -10,13 +10,12 @@ import type { Route } from "./+types/login-page";
 import { commitSession, getSession } from "~/sessions.server";
 import { loginUser } from "~/fake/fake-data";
 
-
 export async function loader({ request }: Route.LoaderArgs) {
-  const session = await getSession(request.headers.get('cookies'));
+  const session = await getSession(request.headers.get("cookies"));
 
-  if (session.has('userId')) {
-    return redirect('/chat');
-  };
+  if (session.has("userId")) {
+    return redirect("/chat");
+  }
   return data(
     // Read and unset the flash message set by the route action.
     { error: session.get("error") },
@@ -28,19 +27,14 @@ export async function loader({ request }: Route.LoaderArgs) {
   );
 }
 
-
-export async function action({
-  request,
-}: Route.ActionArgs) {
-  const session = await getSession(
-    request.headers.get("Cookie"),
-  );
+export async function action({ request }: Route.ActionArgs) {
+  const session = await getSession(request.headers.get("Cookie"));
   const form = await request.formData();
   const email = form.get("email");
   const password = form.get("password");
 
   if (email === "algo@google.com") {
-    session.flash('error', 'Invalid email');
+    session.flash("error", "Invalid email");
     // return redirect('/auht/login?error=Invalid Email'), {
     //  return data({
     //   error:
@@ -48,22 +42,21 @@ export async function action({
     // }
     return data(
       {
-        error: 'Invalid Email',
+        error: "Invalid Email",
       },
       {
         headers: {
-          'Set-cookies': await commitSession(session),
+          "Set-cookies": await commitSession(session),
         },
         status: 400,
-        statusText: 'Bad Request',
-      }
-    )
-
+        statusText: "Bad Request",
+      },
+    );
   }
   const user = await loginUser();
   session.set("userId", user.id);
-  session.set('token', user.token);
-  session.set('name', user.name);
+  session.set("token", user.token);
+  session.set("name", user.name);
 
   // Login succeeded, send them to the home page.
   return redirect("/", {
@@ -80,7 +73,7 @@ const LoginPage = ({ actionData }: Route.ComponentProps) => {
 
   useEffect(() => {
     if (actionData?.error) {
-      alert(actionData.error)
+      alert(actionData.error);
     }
   }, [actionData]);
 
@@ -89,7 +82,6 @@ const LoginPage = ({ actionData }: Route.ComponentProps) => {
       <Card className="overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
           <Form className="p-6 md:p-8" action={"/auth/login"} method={"post"}>
-
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center">
                 <h1 className="text-2xl font-bold">Welcome back</h1>
@@ -184,7 +176,7 @@ const LoginPage = ({ actionData }: Route.ComponentProps) => {
         By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
         and <a href="#">Privacy Policy</a>.
       </div>
-    </div >
+    </div>
   );
 };
 

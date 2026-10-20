@@ -6,7 +6,6 @@ import {
   route,
 } from "@react-router/dev/routes";
 
-
 export default [
   //home
   index("routes/home.tsx"),
@@ -22,7 +21,7 @@ export default [
 
       //actions
     ]),
-    route('logout', 'auth/actions/logout.actions.ts'),
+    route("logout", "auth/actions/logout.actions.ts"),
   ]),
 
   //chat
@@ -32,4 +31,8 @@ export default [
       route("client/:id", "routes/chat/client-chat-page.tsx"),
     ]),
   ]),
+
+  //Productos Prerender
+
+  route("products/:name", "routes/product.tsx"),
 ] satisfies RouteConfig;
